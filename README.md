@@ -1,51 +1,147 @@
-# Trivy — TrillionAI Engineering Reference
+<div align="center">
+<img src="docs/imgs/logo.png" width="200">
 
-**Research-only source archive for TrillionAI Audit. Not a production TrillionAI service.**
+[![GitHub Release][release-img]][release]
+[![Test][test-img]][test]
+[![Go Report Card][go-report-img]][go-report]
+[![License: Apache-2.0][license-img]][license]
+[![GitHub Downloads][github-downloads-img]][release]
+![Docker Pulls][docker-pulls]
 
-## Upstream source
+[📖 Documentation][docs]
+</div>
 
-- Official upstream: https://github.com/aquasecurity/trivy
-- Pinned upstream commit: `239be7b2671a3c9706bbfec2ba4677210cbdcdec`
-- Expected upstream root Git tree: `2a1dae04bf06b3b5d9cb01e9c4a97f7bfbe178a0`
-- Source snapshot branch: `trivy-upstream-snapshot`
-- Archived source directory: `upstream/` **(imported and verified)**
-- Root upstream licence: **Apache License 2.0** (original licence retained inside the source snapshot)
-- GitHub source inventory at the pinned commit: 5,062 Git tree entries (including directories); 95,609,909 bytes of tracked blob contents.
+Trivy ([pronunciation][pronunciation]) is a comprehensive and versatile security scanner.
+Trivy has *scanners* that look for security issues, and *targets* where it can find those issues.
 
-## Source import and verification
+Targets (what Trivy can scan):
 
-**Verified: GitHub Actions source-import job passed.**
+- Container Image
+- Filesystem
+- Git Repository (remote)
+- Virtual Machine Image
+- Kubernetes
 
-- [Successful source import and integrity verification](https://github.com/Anselm04/Trivy-Source-Code-Reference/actions/runs/43644568008)
-- Verified filtered remote source Git tree: `46aa6ce270ab851890ec427ccfb4881f03293f81`
-- Snapshot branch contains **4,994 upstream Git tree entries**, including directories.
-- Retained **3,387 tracked blobs** (~95.5 MB by GitHub's blob-size inventory).
-- Original pinned upstream Git tree: `2a1dae04bf06b3b5d9cb01e9c4a97f7bfbe178a0` (before exclusions).
-- **Excluded:** 66 files in `pkg/fanal/secret/testdata/` and `pkg/fanal/artifact/local/fs_test.go`. GitHub push protection flagged credential-shaped test fixtures in these paths. The exclusions were deliberate; **the filtered snapshot is NOT a byte-for-byte full copy of the unfiltered upstream tree**.
+Scanners (what Trivy can find there):
 
-The [import workflow](.github/workflows/import-trivy-source.yml) retrieves the pinned Git revision without running Trivy, imports the exact Git tree under `upstream/` on a separate branch, and compares the fetched/pushed `upstream/` tree to the expected upstream tree hash.
+- OS packages and software dependencies in use (SBOM)
+- Known vulnerabilities (CVEs)
+- IaC issues and misconfigurations
+- Sensitive information and secrets
+- Software licenses
 
-**Verification status: source snapshot imported and its filtered Git tree verified against the pinned source with declared exclusions.** This does not prove runtime tests pass or that excluded test fixtures are available.
+Trivy supports most popular programming languages, operating systems, and platforms. For a complete list, see the [Scanning Coverage] page.
 
-Once verified, browse:
-[Trivy source snapshot](https://github.com/Anselm04/Trivy-Source-Code-Reference/tree/trivy-upstream-snapshot/upstream).
+To learn more, go to the [Trivy homepage][homepage] for feature highlights, or to the [Documentation site][docs] for detailed information.
 
-The archive includes tracked test fixtures and upstream attribution. It does not contain upstream Git commit history, unrelated deployment infrastructure, or separately downloaded Git LFS contents/submodule contents. The imported Git tree is a pinned snapshot, not necessarily the latest Trivy release.
+## Quick Start
 
-## Research for TrillionAI Audit
+### Get Trivy
 
-Study original Trivy implementations for:
-- Dependency and OS vulnerability checks
-- Source and image misconfiguration analysis
-- Secrets detection and evidence redaction
-- Software licence risk assessment
-- Scanner output normalisation and machine-readable findings
-- Version pinning, vulnerability database provenance and safely bounded execution
+Trivy is available in most common distribution channels. The full list of installation options is available in the [Installation] page. Here are a few popular examples:
 
-Keep the upstream source separately from proprietary TrillionAI Audit code. Implement original Node.js/TypeScript integration interfaces and Flutter views, with independent tests and auditable verification evidence. Do not import the entire Trivy codebase into the private product.
+- `brew install trivy`
+- `docker run aquasec/trivy`
+- Download binary from <https://github.com/aquasecurity/trivy/releases/latest/>
+- See [Installation] for more
 
-## Licensing and provenance
+Trivy is integrated with many popular platforms and applications. The complete list of integrations is available in the [Ecosystem] page. Here are a few popular examples:
 
-The upstream Trivy source is copyrighted by Aqua Security and contributors under their applicable licences. Retain upstream licence and copyright text; check subdirectories and bundled third-party components before distributing or incorporating any individual file. This research repository does not relicence third-party code.
+- [GitHub Actions](https://github.com/aquasecurity/trivy-action)
+- [Kubernetes operator](https://github.com/aquasecurity/trivy-operator)
+- [VS Code plugin](https://github.com/aquasecurity/trivy-vscode-extension)
+- See [Ecosystem] for more
 
-No paid infrastructure or TrillionAI product deployment is activated by this source import.
+### Canary builds
+There are canary builds ([Docker Hub](https://hub.docker.com/r/aquasec/trivy/tags?page=1&name=canary), [GitHub](https://github.com/aquasecurity/trivy/pkgs/container/trivy/75776514?tag=canary), [ECR](https://gallery.ecr.aws/aquasecurity/trivy#canary) images and [binaries](https://github.com/aquasecurity/trivy/actions/workflows/canary.yaml)) generated with every push to the main branch.
+
+Please be aware: canary builds might have critical bugs, so they are not recommended for use in production.
+
+### General usage
+
+```bash
+trivy <target> [--scanners <scanner1,scanner2>] <subject>
+```
+
+Examples:
+
+```bash
+trivy image python:3.4-alpine
+```
+
+<details>
+<summary>Result</summary>
+
+https://github.com/user-attachments/assets/af1c11e7-d9c5-48af-8e05-cb34dfd6352a
+
+</details>
+
+```bash
+trivy fs --scanners vuln,secret,misconfig myproject/
+```
+
+<details>
+<summary>Result</summary>
+
+https://github.com/user-attachments/assets/6b3894b7-77c5-4ffc-ac94-ffe6648a30dc
+
+</details>
+
+```bash
+trivy k8s --report summary cluster
+```
+
+<details>
+<summary>Result</summary>
+
+![k8s summary](docs/imgs/trivy-k8s.png)
+
+</details>
+
+## FAQ
+
+### How to pronounce the name "Trivy"?
+
+`tri` is pronounced like **tri**gger, `vy` is pronounced like en**vy**.
+
+## Want more? Check out Aqua
+
+If you liked Trivy, you will love Aqua which builds on top of Trivy to provide even more enhanced capabilities for a complete security management offering.  
+You can find a high level comparison table specific to Trivy users [here](https://trivy.dev/docs/latest/commercial/compare/).
+In addition check out the <https://aquasec.com> website for more information about our products and services.
+If you'd like to contact Aqua or request a demo, please use this form: <https://www.aquasec.com/demo>
+
+## Community
+
+Trivy is an [Aqua Security][aquasec] open source project.  
+Learn about our open source work and portfolio [here][oss].  
+Contact us about any matter by opening a GitHub Discussion [here][discussions]
+
+Please ensure to abide by our [Code of Conduct][code-of-conduct] during all interactions.
+
+[test]: https://github.com/aquasecurity/trivy/actions/workflows/test.yaml
+[test-img]: https://github.com/aquasecurity/trivy/actions/workflows/test.yaml/badge.svg
+[go-report]: https://goreportcard.com/report/github.com/aquasecurity/trivy
+[go-report-img]: https://goreportcard.com/badge/github.com/aquasecurity/trivy
+[release]: https://github.com/aquasecurity/trivy/releases
+[release-img]: https://img.shields.io/github/release/aquasecurity/trivy.svg?logo=github
+[github-downloads-img]: https://img.shields.io/github/downloads/aquasecurity/trivy/total?logo=github
+[docker-pulls]: https://img.shields.io/docker/pulls/aquasec/trivy?logo=docker&label=docker%20pulls%20%2F%20trivy
+[license]: https://github.com/aquasecurity/trivy/blob/main/LICENSE
+[license-img]: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+[homepage]: https://trivy.dev
+[docs]: https://trivy.dev/docs/latest/
+[pronunciation]: #how-to-pronounce-the-name-trivy
+[code-of-conduct]: https://github.com/aquasecurity/community/blob/main/CODE_OF_CONDUCT.md
+
+[Installation]:https://trivy.dev/docs/latest/getting-started/installation/
+[Ecosystem]: https://trivy.dev/docs/latest/ecosystem/
+[Scanning Coverage]: https://trivy.dev/docs/latest/coverage/
+
+[alpine]: https://ariadne.space/2021/06/08/the-vulnerability-remediation-lifecycle-of-alpine-containers/
+[rego]: https://www.openpolicyagent.org/docs/latest/#rego
+[sigstore]: https://www.sigstore.dev/
+
+[aquasec]: https://aquasec.com
+[oss]: https://www.aquasec.com/products/open-source-projects/
+[discussions]: https://github.com/aquasecurity/trivy/discussions
