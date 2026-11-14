@@ -1,0 +1,134 @@
+{
+  "source": "https://github.com/aquasecurity/trivy.git",
+  "commit": "239be7b2671a3c9706bbfec2ba4677210cbdcdec",
+  "number_of_original_workflow_files": 21,
+  "original_ci_is_disabled": true,
+  "files": [
+    {
+      "upstream_path": ".github/workflows/auto-close-issue.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/auto-close-issue.yaml",
+      "git_blob": "8d38c947cd630554728ee09a6909e46012b4c746",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/auto-ready-for-review.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/auto-ready-for-review.yaml",
+      "git_blob": "6bc08a4b855717173363aea9a84fdfc7e131432c",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/auto-update-labels.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/auto-update-labels.yaml",
+      "git_blob": "4dad6f13456624d17602bec9f19c394e1c24f49b",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/backport.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/backport.yaml",
+      "git_blob": "a5fecc090f51dd0dc857701c41f8638f62a4fdf5",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/bypass-cla.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/bypass-cla.yaml",
+      "git_blob": "93818d08e41bddf6f7f63bfe27f71134d90be3b7",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/bypass-test.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/bypass-test.yaml",
+      "git_blob": "93c5ba2869d3c396b59c5176555d0b424e73bb0f",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/cache-test-assets.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/cache-test-assets.yaml",
+      "git_blob": "b5a278f4b7d838515e27c7df99848d6db563162f",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/canary.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/canary.yaml",
+      "git_blob": "b3b5e581c5ac15a5a0467725ee528b0572818174",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/mkdocs-dev.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/mkdocs-dev.yaml",
+      "git_blob": "e199e240504569aae40ab6faa0326a59354e2922",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/mkdocs-latest.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/mkdocs-latest.yaml",
+      "git_blob": "1a6f154fe9d4ff1b6bc7c85c8b9bbb224addec89",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/publish-chart.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/publish-chart.yaml",
+      "git_blob": "5cdeb48c161c08ede25a499ef084a2d034616975",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/release-please.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/release-please.yaml",
+      "git_blob": "590bb1d4b2b6292e8d64c9a6f18dac7258fbdec1",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/release-pr-check.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/release-pr-check.yaml",
+      "git_blob": "709b32bfb75a6858074eae506da955dcbab9a587",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/release.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/release.yaml",
+      "git_blob": "a780dcedf0a2fee4549c100ec636f77bb3c66524",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/reusable-release.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/reusable-release.yaml",
+      "git_blob": "3cdab98547db5277a36ce20663cc917c4ca1048b",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/semantic-pr.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/semantic-pr.yaml",
+      "git_blob": "f82b612579237b47c142d2acd2d4f3361ca52088",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/spdx-cron.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/spdx-cron.yaml",
+      "git_blob": "202ec38eba8e379697567e0ae7f8b9aa4281cd44",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/stale-issues.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/stale-issues.yaml",
+      "git_blob": "c169bc6a1d56d68e27bd2c66ab1a6049695ce5c0",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/test-docs.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/test-docs.yaml",
+      "git_blob": "6c2f7d1622366cbbca2ac16fc403632c1d77e8ab",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/test.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/test.yaml",
+      "git_blob": "e1ced9d95e09b7959650d954f216110bd6b08f14",
+      "original_mode": "100644"
+    },
+    {
+      "upstream_path": ".github/workflows/triage.yaml",
+      "reference_path": "upstream-workflow-snapshots/trivy/.github/workflows/triage.yaml",
+      "git_blob": "5438b153fc077033a8ca799842996bd37c41b9f2",
+      "original_mode": "100644"
+    }
+  ]
+}
