@@ -72,6 +72,9 @@ jobs:
           # GitHub correctly rejects these on a public repository. Do NOT
           # bypass push protection. Exclude only this documented directory.
           git rm -r --cached --force -- upstream/pkg/fanal/secret/testdata/
+          # Additional upstream fixture embeds a GitLab token-shaped string.
+          # Exclude the entire original test file rather than change its bytes.
+          git rm --cached --force -- upstream/pkg/fanal/artifact/local/fs_test.go
           filtered_tree="$(git write-tree)"
           echo "Filtered destination tree: $filtered_tree"
           git commit -m "archive: import pinned Trivy source ($PINNED_SHA)"
@@ -97,4 +100,5 @@ jobs:
           echo "VERIFIED SOURCE SHA: $PINNED_SHA"
           echo "VERIFIED FILTERED REMOTE SOURCE GIT TREE: $remote_tree"
           echo "EXCLUDED PATH: upstream/pkg/fanal/secret/testdata/"
+          echo "EXCLUDED FILE: upstream/pkg/fanal/artifact/local/fs_test.go"
           echo "Archived under branch $SNAPSHOT_BRANCH in upstream/"
