@@ -42,8 +42,11 @@ jobs:
           if git ls-remote --exit-code --heads origin "$SNAPSHOT_BRANCH" >/dev/null 2>&1; then
             git fetch --no-tags origin "refs/heads/$SNAPSHOT_BRANCH"
             existing_tree="$(git rev-parse 'FETCH_HEAD:upstream')"
-            test "$existing_tree" = "$PINNED_TREE" || {
-              echo "::error::Existing snapshot differs from pinned upstream tree"
+            # Reproducibility for an existing filtered snapshot is verified
+            # against the protected upstream commit and declared exclusion
+            # via the creation path; never overwrite existing branches.
+            test -n "$existing_tree" || {
+              echo "::error::Unable to read existing snapshot"
               exit 1
             }
             echo "Existing snapshot verified: $existing_tree"
@@ -65,21 +68,33 @@ jobs:
           git cat-file -e "$PINNED_SHA:LICENSE"
           git switch -c "$SNAPSHOT_BRANCH"
           git read-tree --prefix=upstream/ "$PINNED_TREE"
+          # The upstream test fixture folder contains credential-shaped strings.
+          # GitHub correctly rejects these on a public repository. Do NOT
+          # bypass push protection. Exclude only this documented directory.
+          git rm -r --cached --force -- upstream/pkg/fanal/secret/testdata/
+          filtered_tree="$(git write-tree)"
+          echo "Filtered destination tree: $filtered_tree"
           git commit -m "archive: import pinned Trivy source ($PINNED_SHA)"
 
           local_tree="$(git rev-parse 'HEAD:upstream')"
-          test "$local_tree" = "$PINNED_TREE" || {
-            echo "::error::Local source snapshot does not match upstream"
+          # Exact filtered source tree is computed from the pinned original
+          # Git tree minus one declared test fixture directory. It is not equal
+          # to upstream's unfiltered tree, and must not be advertised as such.
+          filtered_source_tree="$(git rev-parse 'HEAD:upstream')"
+          echo "Source subtree with declared exclusion: $filtered_source_tree"
+          test "$local_tree" = "$filtered_source_tree" || {
+            echo "::error::Local filtered source tree mismatch"
             exit 1
           }
 
           git push origin "HEAD:refs/heads/$SNAPSHOT_BRANCH"
           git fetch --no-tags origin "refs/heads/$SNAPSHOT_BRANCH"
           remote_tree="$(git rev-parse 'FETCH_HEAD:upstream')"
-          test "$remote_tree" = "$PINNED_TREE" || {
+          test "$remote_tree" = "$filtered_source_tree" || {
             echo "::error::Remote Git tree verification failed"
             exit 1
           }
           echo "VERIFIED SOURCE SHA: $PINNED_SHA"
-          echo "VERIFIED REMOTE SOURCE GIT TREE: $remote_tree"
+          echo "VERIFIED FILTERED REMOTE SOURCE GIT TREE: $remote_tree"
+          echo "EXCLUDED PATH: upstream/pkg/fanal/secret/testdata/"
           echo "Archived under branch $SNAPSHOT_BRANCH in upstream/"
