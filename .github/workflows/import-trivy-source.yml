@@ -1,0 +1,85 @@
+name: Import and verify pinned Trivy source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-trivy-source.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trivy-source-import
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout research repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: Fetch pinned upstream source and verify exact tree
+        shell: bash
+        env:
+          PINNED_SHA: '239be7b2671a3c9706bbfec2ba4677210cbdcdec'
+          PINNED_TREE: '2a1dae04bf06b3b5d9cb01e9c4a97f7bfbe178a0'
+          SNAPSHOT_BRANCH: 'trivy-upstream-snapshot'
+        run: |
+          set -euo pipefail
+          git config user.name 'TrillionAI Source Archive Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git remote add upstream-original https://github.com/aquasecurity/trivy.git
+
+          # GitHub can already contain a matching snapshot from a previous run.
+          # Never overwrite an unmatched snapshot branch.
+          if git ls-remote --exit-code --heads origin "$SNAPSHOT_BRANCH" >/dev/null 2>&1; then
+            git fetch --no-tags origin "refs/heads/$SNAPSHOT_BRANCH"
+            existing_tree="$(git rev-parse 'FETCH_HEAD:upstream')"
+            test "$existing_tree" = "$PINNED_TREE" || {
+              echo "::error::Existing snapshot differs from pinned upstream tree"
+              exit 1
+            }
+            echo "Existing snapshot verified: $existing_tree"
+            exit 0
+          fi
+
+          # Fetch one exact upstream commit, not historical Git history.
+          # This copies source data without executing upstream application code.
+          git fetch --no-tags --depth=1 upstream-original "$PINNED_SHA"
+          fetched="$(git rev-parse 'FETCH_HEAD^{commit}')"
+          test "$fetched" = "$PINNED_SHA"
+          source_tree="$(git rev-parse 'FETCH_HEAD^{tree}')"
+          test "$source_tree" = "$PINNED_TREE" || {
+            echo "::error::Source tree mismatch"
+            exit 1
+          }
+
+          # Ensure upstream's original licence is carried intact in snapshot.
+          git cat-file -e "$PINNED_SHA:LICENSE"
+          git switch -c "$SNAPSHOT_BRANCH"
+          git read-tree --prefix=upstream/ "$PINNED_TREE"
+          git commit -m "archive: import pinned Trivy source ($PINNED_SHA)"
+
+          local_tree="$(git rev-parse 'HEAD:upstream')"
+          test "$local_tree" = "$PINNED_TREE" || {
+            echo "::error::Local source snapshot does not match upstream"
+            exit 1
+          }
+
+          git push origin "HEAD:refs/heads/$SNAPSHOT_BRANCH"
+          git fetch --no-tags origin "refs/heads/$SNAPSHOT_BRANCH"
+          remote_tree="$(git rev-parse 'FETCH_HEAD:upstream')"
+          test "$remote_tree" = "$PINNED_TREE" || {
+            echo "::error::Remote Git tree verification failed"
+            exit 1
+          }
+          echo "VERIFIED SOURCE SHA: $PINNED_SHA"
+          echo "VERIFIED REMOTE SOURCE GIT TREE: $remote_tree"
+          echo "Archived under branch $SNAPSHOT_BRANCH in upstream/"
